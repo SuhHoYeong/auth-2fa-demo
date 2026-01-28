@@ -1,0 +1,27 @@
+import { Routes, Route, Navigate } from "react-router-dom";
+import LoginPage from "./pages/LoginPage";
+import TwoFactorPage from "./pages/TwoFactorPage";
+import MainPage from "./pages/MainPage";
+import ProtectedRoute from "./components/ProtectedRoute";
+
+export default function App() {
+  console.log("API BASE URL =", import.meta.env.VITE_API_BASE_URL);
+  return (
+    <Routes>
+      <Route path="/login" element={<LoginPage />} />
+      <Route path="/2fa" element={<TwoFactorPage />} />
+
+      <Route
+        path="/"
+        element={
+          <ProtectedRoute>
+            <MainPage />
+          </ProtectedRoute>
+        }
+      />
+
+      {/* 없는 주소 들어오면 메인으로 */}
+      <Route path="*" element={<Navigate to="/" replace />} />
+    </Routes>
+  );
+}
