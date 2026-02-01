@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.suhhoyeong.backend.auth.mapper.UserMapper">
+
+  <select id="findByEmail" resultType="com.suhhoyeong.backend.auth.model.User">
+    SELECT
+      id,
+      email,
+      password_hash AS passwordHash,
+      provider,
+      provider_sub AS providerSub,
+      phone,
+      twofa_enabled AS twofaEnabled,
+      twofa_secret AS twofaSecret
+    FROM users
+    WHERE email = #{email}
+  </select>
+
+  <insert id="insertUser"
+          parameterType="com.suhhoyeong.backend.auth.model.User"
+          useGeneratedKeys="true"
+          keyProperty="id">
+    INSERT INTO users (email, password_hash, provider, provider_sub, phone, twofa_enabled, twofa_secret)
+    VALUES (#{email}, #{passwordHash}, #{provider}, #{providerSub}, #{phone}, #{twofaEnabled}, #{twofaSecret})
+  </insert>
+
+  <update id="updateTwofaSecretByEmail">
+    UPDATE users
+    SET twofa_secret = #{secret}, updated_at = now()
+    WHERE email = #{email}
+  </update>
+
+  <update id="setTwofaEnabledByEmail">
+    UPDATE users
+    SET twofa_enabled = #{enabled}, updated_at = now()
+    WHERE email = #{email}
+  </update>
+
+</mapper>
